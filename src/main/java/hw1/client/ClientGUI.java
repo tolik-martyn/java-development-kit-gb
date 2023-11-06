@@ -33,6 +33,15 @@ public class ClientGUI extends JFrame {
         setSize(WIDTH, HEIGHT);
         setTitle("Chat Client");
 
+        createTopPanel();
+        createBottomPanel();
+        createLogPanel();
+        createUserListPanel();
+
+        setVisible(true);
+    }
+
+    private void createTopPanel() {
         topRow1.add(tfIPAddress);
         topRow1.add(tfPort);
         topRow2.add(tfLogin);
@@ -42,17 +51,23 @@ public class ClientGUI extends JFrame {
         panelTop.add(topRow1);
         panelTop.add(topRow2);
         add(panelTop, BorderLayout.NORTH);
+    }
 
+    private void createBottomPanel() {
         panelBottom.add(tfMessage, BorderLayout.CENTER);
         panelBottom.add(btnSend, BorderLayout.EAST);
         add(panelBottom, BorderLayout.SOUTH);
+    }
 
+    private void createLogPanel() {
         JScrollPane scrollLog = new JScrollPane(log);
         log.setLineWrap(true);
         log.setWrapStyleWord(true);
         log.setEditable(false);
         add(scrollLog);
+    }
 
+    private void createUserListPanel() {
         DefaultListModel<String> userListModel = new DefaultListModel<>();
         userListModel.addElement("George");
         userListModel.addElement("Nicholas");
@@ -63,7 +78,5 @@ public class ClientGUI extends JFrame {
         JScrollPane userListScrollPane = new JScrollPane(userList);
         userListScrollPane.setPreferredSize(new Dimension(100, 0));
         add(userListScrollPane, BorderLayout.WEST);
-
-        setVisible(true);
     }
 }
