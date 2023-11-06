@@ -7,6 +7,9 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Класс, представляющий графический интерфейс клиента чата.
+ */
 public class ClientGUI extends JFrame {
     private static final int WIDTH = 600;
     private static final int HEIGHT = 300;
@@ -88,6 +91,9 @@ public class ClientGUI extends JFrame {
 
     }
 
+    /**
+     * Метод, который создает верхнюю панель интерфейса с полями ввода адреса сервера, порта, логина и пароля.
+     */
     private void createTopPanel() {
         topRow1.add(tfIPAddress);
         topRow1.add(tfPort);
@@ -100,12 +106,18 @@ public class ClientGUI extends JFrame {
         add(panelTop, BorderLayout.NORTH);
     }
 
+    /**
+     * Метод, который создает нижнюю панель интерфейса с полем для ввода сообщения и кнопкой отправки.
+     */
     private void createBottomPanel() {
         panelBottom.add(tfMessage, BorderLayout.CENTER);
         panelBottom.add(btnSend, BorderLayout.EAST);
         add(panelBottom, BorderLayout.SOUTH);
     }
 
+    /**
+     * Метод, который создает панель для вывода сообщений чата.
+     */
     private void createLogPanel() {
         JScrollPane scrollLog = new JScrollPane(log);
         log.setLineWrap(true);
@@ -114,6 +126,9 @@ public class ClientGUI extends JFrame {
         add(scrollLog);
     }
 
+    /**
+     * Метод, который создает панель для списка пользователей чата.
+     */
     private void createUserListPanel() {
         userListModel.addElement("George");
         userListModel.addElement("Nicholas");
@@ -126,6 +141,12 @@ public class ClientGUI extends JFrame {
         add(userListScrollPane, BorderLayout.WEST);
     }
 
+    /**
+     * Метод для отправки сообщения на сервер.
+     *
+     * @param successMessage Сообщение, если сообщение отправлено успешно.
+     * @param failedMessage  Сообщение, если отправка сообщения не удалась.
+     */
     public void sendMessage(String successMessage, String failedMessage) {
         String currentTime = getCurrentTime();
         if (!serverWindow.isSendMessage(successMessage, failedMessage, currentTime)) {
@@ -133,10 +154,18 @@ public class ClientGUI extends JFrame {
         }
     }
 
+    /**
+     * Обновляет историю чата в интерфейсе клиента.
+     */
     public void updateChatHistory() {
         log.setText(serverWindow.readChatHistory());
     }
 
+    /**
+     * Возвращает текущее время в формате "dd.MM.yyyy HH:mm:ss, ".
+     *
+     * @return Текущее время в виде строки.
+     */
     public String getCurrentTime() {
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");

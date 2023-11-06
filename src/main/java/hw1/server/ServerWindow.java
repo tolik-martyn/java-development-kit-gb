@@ -8,6 +8,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс, представляющий окно сервера.
+ */
 public class ServerWindow extends JFrame {
 
     private static final int POS_X = 500;
@@ -34,6 +37,9 @@ public class ServerWindow extends JFrame {
         registerUser(new User("user2", "password2"));
     }
 
+    /**
+     * Метод для инициализации пользовательского интерфейса сервера.
+     */
     private void initializeUI() {
         isServerWorking = false;
 
@@ -62,6 +68,9 @@ public class ServerWindow extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Метод для запуска сервера.
+     */
     private void startServer() {
         if (!isServerWorking) {
             isServerWorking = true;
@@ -73,6 +82,9 @@ public class ServerWindow extends JFrame {
         }
     }
 
+    /**
+     * Метод для остановки сервера.
+     */
     private void stopServer() {
         if (isServerWorking) {
             isServerWorking = false;
@@ -84,6 +96,11 @@ public class ServerWindow extends JFrame {
         }
     }
 
+    /**
+     * Метод для записи сообщения в файл.
+     *
+     * @param message Сообщение, которое нужно записать.
+     */
     public void writeToChatHistory(String message) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/main/java/hw1/chat_history.txt", true))) {
             writer.write(message + "\n");
@@ -92,6 +109,11 @@ public class ServerWindow extends JFrame {
         }
     }
 
+    /**
+     * Метод для чтения истории чата из файла.
+     *
+     * @return История чата в виде строки.
+     */
     public String readChatHistory() {
         StringWriter chatHistory = new StringWriter();
 
@@ -107,6 +129,14 @@ public class ServerWindow extends JFrame {
         return chatHistory.toString();
     }
 
+    /**
+     * Метод для проверки, можно ли отправить сообщение.
+     *
+     * @param successMessage Сообщение, если сообщение отправлено успешно.
+     * @param failedMessage  Сообщение, если отправка сообщения не удалась.
+     * @param currentTime    Текущее время для сообщения.
+     * @return true, если сообщение отправлено успешно, иначе false.
+     */
     public boolean isSendMessage(String successMessage, String failedMessage, String currentTime) {
         if (isServerWorking) {
             // TODO: 06.11.2023 Реализовать показ сообщения всем клиентам.
@@ -119,10 +149,22 @@ public class ServerWindow extends JFrame {
         }
     }
 
+    /**
+     * Метод для регистрации пользователя.
+     *
+     * @param user Пользователь для регистрации.
+     */
     public void registerUser(User user) {
         registeredUsers.add(user);
     }
 
+    /**
+     * Метод для аутентификации пользователя на сервере.
+     *
+     * @param username Имя пользователя.
+     * @param password Пароль пользователя.
+     * @return true, если аутентификация прошла успешно, иначе false.
+     */
     public boolean authenticateUser(String username, String password) {
         for (User user : registeredUsers) {
             if (user.username().equals(username) && user.password().equals(password)) {
