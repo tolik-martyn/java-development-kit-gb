@@ -2,8 +2,6 @@ package hw1.server;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ServerWindow extends JFrame {
 
@@ -27,36 +25,15 @@ public class ServerWindow extends JFrame {
     }
 
     ServerWindow() {
+        initializeUI();
+    }
 
+    private void initializeUI() {
         isServerWorking = false;
 
-        btnStop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (isServerWorking) {
-                    isServerWorking = false;
-                    log.append(SERVER_STOPPED_MESSAGE);
-                    // System.out.print(SERVER_STOPPED_MESSAGE);
-                } else {
-                    log.append(SERVER_NOT_RUNNING_MESSAGE);
-                    // System.out.print(SERVER_NOT_RUNNING_MESSAGE);
-                }
-            }
-        });
+        btnStop.addActionListener(e -> stopServer());
 
-        btnStart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!isServerWorking) {
-                    isServerWorking = true;
-                    log.append(SERVER_STARTED_MESSAGE);
-                    // System.out.print(SERVER_STARTED_MESSAGE);
-                } else {
-                    log.append(SERVER_ALREADY_RUNNING_MESSAGE);
-                    // System.out.print(SERVER_ALREADY_RUNNING_MESSAGE);
-                }
-            }
-        });
+        btnStart.addActionListener(e -> startServer());
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setBounds(POS_X, POS_Y, WIDTH, HEIGHT);
@@ -71,11 +48,33 @@ public class ServerWindow extends JFrame {
         log.setEditable(false);
         add(scrollPane, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1,2));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
         buttonPanel.add(btnStart);
         buttonPanel.add(btnStop);
         add(buttonPanel, BorderLayout.SOUTH);
 
         setVisible(true);
+    }
+
+    private void startServer() {
+        if (!isServerWorking) {
+            isServerWorking = true;
+            log.append(SERVER_STARTED_MESSAGE);
+            // System.out.print(SERVER_STARTED_MESSAGE);
+        } else {
+            log.append(SERVER_ALREADY_RUNNING_MESSAGE);
+            // System.out.print(SERVER_ALREADY_RUNNING_MESSAGE);
+        }
+    }
+
+    private void stopServer() {
+        if (isServerWorking) {
+            isServerWorking = false;
+            log.append(SERVER_STOPPED_MESSAGE);
+            // System.out.print(SERVER_STOPPED_MESSAGE);
+        } else {
+            log.append(SERVER_NOT_RUNNING_MESSAGE);
+            // System.out.print(SERVER_NOT_RUNNING_MESSAGE);
+        }
     }
 }
