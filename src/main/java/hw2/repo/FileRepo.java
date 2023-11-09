@@ -7,18 +7,21 @@ public class FileRepo implements IRepo {
 
     @Override
     public String getHistory() {
-        StringWriter chatHistory = new StringWriter();
         try (BufferedReader reader = new BufferedReader(new FileReader(LOG_PATH))) {
+            StringBuilder chatHistory = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 chatHistory.append(line).append("\n");
             }
+            if (!chatHistory.isEmpty()) {
+                return chatHistory.toString();
+            } else {
+                return "История чатов пустая.\n";
+            }
         } catch (IOException e) {
             System.err.println("Ошибка при чтении данных из файла.");
+            return "Произошла ошибка при чтении данных из истории.\n";
         }
-        String result = chatHistory.toString();
-        if (result.isEmpty()) return "История чатов пустая.\n";
-        return result;
     }
 
     @Override
