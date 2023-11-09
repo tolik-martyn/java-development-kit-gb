@@ -1,8 +1,8 @@
 package hw2.server;
 
 import hw2.client.Client;
+import hw2.repo.IRepo;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,12 +10,13 @@ public class Server {
 
 
     private final ServerView serverView;
+    private final IRepo iRepo;
     private final List<Client> registeredClient = new ArrayList<>();
-    private static final String LOG_PATH = "src/main/java/hw2/chat_history.txt";
     private boolean isServerWorking;
 
-    public Server(ServerView serverView) {
+    public Server(ServerView serverView, IRepo iRepo) {
         this.serverView = serverView;
+        this.iRepo = iRepo;
     }
 
     public boolean connectClient(Client client) {
@@ -30,18 +31,7 @@ public class Server {
      * @return История чата в виде строки.
      */
     public String getHistory() {
-        StringWriter chatHistory = new StringWriter();
-        try (BufferedReader reader = new BufferedReader(new FileReader(LOG_PATH))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                chatHistory.append(line).append("\n");
-            }
-        } catch (IOException e) {
-            System.err.println("Ошибка при чтении данных из файла.");
-        }
-        String result = chatHistory.toString();
-        if (result.isEmpty()) return "История чатов пустая.\n";
-        return result;
+        return iRepo.getHistory();
     }
 
     public void disconnectClient(Client client) {
@@ -78,11 +68,7 @@ public class Server {
      * @param text - данные, которые нужно записать.
      */
     private void saveInLog(String text) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG_PATH, true))) {
-            writer.write(text);
-        } catch (IOException e) {
-            System.err.println("Ошибка при записи данных в файл");
-        }
+        iRepo.saveInLog(text);
     }
 
     public boolean hasStarted() {

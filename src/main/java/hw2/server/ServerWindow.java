@@ -1,5 +1,7 @@
 package hw2.server;
 
+import hw2.repo.FileRepo;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -22,7 +24,7 @@ public class ServerWindow extends JFrame implements ServerView {
     private final Server server;
 
     public ServerWindow() {
-        this.server = new Server(this);
+        this.server = new Server(this, new FileRepo());
         initializeUI();
     }
 
@@ -39,7 +41,6 @@ public class ServerWindow extends JFrame implements ServerView {
         setLayout(new BorderLayout());
 
         createServerPanel();
-
 
         setVisible(true);
     }
