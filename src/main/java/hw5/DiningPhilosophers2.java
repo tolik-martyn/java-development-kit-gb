@@ -2,29 +2,28 @@ package hw5;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.Random;
-
 
 /**
  * Класс, реализующий задачу обедающих философов.
- * Когда один ест, все остальные размышляют.
+ * Одновременно могут есть один или два философа (которые используют непересекающиеся вилки).
  */
-public class DiningPhilosophers1 {
+public class DiningPhilosophers2 {
 
     private static final int NUM_PHILOSOPHERS = 5;
     private static final int EAT_COUNT = 3;
 
     public static void main(String[] args) {
         Object[] forks = new Object[NUM_PHILOSOPHERS];
-        Lock commonLock = new ReentrantLock();
+        Lock[] philosopherLocks = new ReentrantLock[NUM_PHILOSOPHERS];
 
         for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
             forks[i] = new Object();
+            philosopherLocks[i] = new ReentrantLock();
         }
 
         Philosopher[] philosophers = new Philosopher[NUM_PHILOSOPHERS];
         for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
-            philosophers[i] = new Philosopher(i, forks[i], forks[(i + 1) % NUM_PHILOSOPHERS], commonLock);
+            philosophers[i] = new Philosopher(i, forks[i], forks[(i + 1) % NUM_PHILOSOPHERS], philosopherLocks[i]);
             new Thread(philosophers[i]).start();
         }
     }
@@ -36,23 +35,22 @@ public class DiningPhilosophers1 {
         private final int id;
         private final Object leftFork;
         private final Object rightFork;
-        private final Lock commonLock;
-        private final Random random = new Random();
+        private final Lock philosopherLock;
         private int eatCount = 0;
 
         /**
          * Конструктор класса Philosopher.
          *
-         * @param id          Идентификатор философа.
-         * @param leftFork    Левая вилка.
-         * @param rightFork   Правая вилка.
-         * @param commonLock  Общий замок.
+         * @param id              уникальный идентификатор философа
+         * @param leftFork        левая вилка
+         * @param rightFork       правая вилка
+         * @param philosopherLock блокировка для безопасного взаимодействия с общими ресурсами
          */
-        public Philosopher(int id, Object leftFork, Object rightFork, Lock commonLock) {
+        public Philosopher(int id, Object leftFork, Object rightFork, Lock philosopherLock) {
             this.id = id;
             this.leftFork = leftFork;
             this.rightFork = rightFork;
-            this.commonLock = commonLock;
+            this.philosopherLock = philosopherLock;
         }
 
         /**
@@ -79,7 +77,6 @@ public class DiningPhilosophers1 {
          */
         private void think() throws InterruptedException {
             System.out.println("Философ " + id + " размышляет.");
-            Thread.sleep(random.nextInt(1000));
         }
 
         /**
@@ -89,16 +86,17 @@ public class DiningPhilosophers1 {
          */
         private void eat() throws InterruptedException {
             try {
-                commonLock.lock();
+                philosopherLock.lock();
                 synchronized (leftFork) {
                     synchronized (rightFork) {
-                        System.out.println("Философ " + id + " ест.");
-                        Thread.sleep(random.nextInt(1000));
+                        System.out.println("Философ " + id + " ест и использует вилки " + leftFork.hashCode() + " и " +
+                                rightFork.hashCode());
+                        Thread.sleep(3000);
                         putDownForks();
                     }
                 }
             } finally {
-                commonLock.unlock();
+                philosopherLock.unlock();
             }
         }
 
